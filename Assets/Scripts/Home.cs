@@ -1,20 +1,20 @@
 using UnityEngine;
 using UnityEngine.Audio;
-using System.Collections;
 
+[RequireComponent(typeof(AudioSource))]
 public class Home : MonoBehaviour
 {
     [SerializeField] private GameObject _door;
     [SerializeField] private AudioMixerGroup _audio;
 
     private AudioSource _alarm;
-    private bool _isHacked;
+    private bool _isPlayerInside;
 
     private void Start()
     {
-        _alarm = gameObject.GetComponent<AudioSource>();
+        _alarm = GetComponent<AudioSource>();
         _audio.audioMixer.SetFloat("Alarm", -60);
-        _isHacked = false;
+        _isPlayerInside = false;
     }
 
     private void Update()
@@ -22,25 +22,25 @@ public class Home : MonoBehaviour
         ChangeVolume(20, -60, 0);
     }
 
-    private void ChangeVolume(float step, float min, float max)
+    private void ChangeVolume(float maxDelta, float minVolumeDB, float maxVolumeDB)
     {
-        float value;
-        _audio.audioMixer.GetFloat("Alarm", out value);
+        float volumeDB;
+        _audio.audioMixer.GetFloat("Alarm", out volumeDB);
 
-        if (_isHacked)
+        if (_isPlayerInside)
         {
-            if (value < max)
+            if (volumeDB < maxVolumeDB)
             {
-                SetAlarmVolume(Mathf.MoveTowards(value, max, step * Time.deltaTime));
+                SetAlarmVolume(Mathf.MoveTowards(volumeDB, maxVolumeDB, maxDelta * Time.deltaTime));
             }
         }
-        else if (!_isHacked)
+        else if (_isPlayerInside == false)
         {
-            if (value > min)
+            if (volumeDB > minVolumeDB)
             {
-                SetAlarmVolume(Mathf.MoveTowards(value, min, step * Time.deltaTime));
+                SetAlarmVolume(Mathf.MoveTowards(volumeDB, minVolumeDB, maxDelta * Time.deltaTime));
 
-                if (value == min)
+                if (volumeDB == minVolumeDB)
                 {
                     DeactiveAlarm();
                 }
@@ -52,7 +52,7 @@ public class Home : MonoBehaviour
     {
         if (collision.TryGetComponent<PlayerMove>(out PlayerMove player))
         {
-            _isHacked = true;
+            _isPlayerInside = true;
             ActivateAlarm();            
         }
     }
@@ -61,7 +61,7 @@ public class Home : MonoBehaviour
     {
         if (collision.TryGetComponent<PlayerMove>(out PlayerMove player))
         {
-            _isHacked = false;
+            _isPlayerInside = false;
         }
     }
 
@@ -75,9 +75,9 @@ public class Home : MonoBehaviour
         _alarm.Stop();
     }
 
-    private void SetAlarmVolume(float value)
+    private void SetAlarmVolume(float volume)
     {
-        _audio.audioMixer.SetFloat("Alarm", value);
+        _audio.audioMixer.SetFloat("Alarm", volume);
     }
     public void OpenDoor()
     {

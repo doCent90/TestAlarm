@@ -418,6 +418,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff8445e79b473784d98dc65927ccbcb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _points:
+  - {fileID: 126000877}
+  - {fileID: 848732177}
+  - {fileID: 1635959814}
+  - {fileID: 1449026383}
+  - {fileID: 576870535}
+  _warningPoint: {fileID: 1635959813}
   _path: {fileID: 1339697814}
 --- !u!50 &90088825
 Rigidbody2D:

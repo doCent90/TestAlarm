@@ -1,12 +1,14 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
+
 public class AnimatePlayer : MonoBehaviour
 {
     private Animator _animator;
 
     private void Start()
     {
-        _animator = gameObject.GetComponent<Animator>();
+        _animator = GetComponent<Animator>();
     }
 
     public void EnableHit()
@@ -14,11 +16,11 @@ public class AnimatePlayer : MonoBehaviour
         _animator.SetTrigger("Hit");
     }
 
-    public void EnableWalk(float value)
+    public void EnableWalk(float speed)
     {
-        if (value > 0)
+        if (speed > 0)
         {
-            _animator.SetFloat("Walk", value);
+            _animator.SetFloat("Walk", speed);
         }
         else
         {
