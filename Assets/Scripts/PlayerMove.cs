@@ -34,8 +34,8 @@ public class PlayerMove : MonoBehaviour
                 _currentPoint++;
                 if (transform.position.x == _warningPoint.transform.position.x)
                 {
-                    _speed = 2f;
-                    _sprite.flipX = true;
+                    IncreaseSpeed();
+                    EnableFlipX();
                 }
             }
         }        
@@ -46,7 +46,7 @@ public class PlayerMove : MonoBehaviour
         if (collision.TryGetComponent<Home>(out Home home))
         {
             home.OpenDoor();
-            _animation.EnableHit();            
+            _animation.EnableHit();
         }
     }
 
@@ -56,5 +56,15 @@ public class PlayerMove : MonoBehaviour
         {
             home.CloseDoor();
         }
+    }
+
+    private void IncreaseSpeed()
+    {
+        _speed += 1f;
+    }
+
+    private void EnableFlipX()
+    {
+        _sprite.flipX = true;
     }
 }
